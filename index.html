@@ -3,96 +3,235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Five Element Insight</title>
+  <title>Five Element Energy Insight</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: 'Open Sans', sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #f0f4f8);
+      background: linear-gradient(to bottom, #e0f2f1, #ffffff);
       color: #222;
-      padding: 20px;
+      margin: 0;
+      padding: 0 10px;
     }
     .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     }
-    input, button {
+    h1, h2 {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      font-size: 16px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 16px;
     }
     button {
-      background: #007BFF;
+      background-color: #0077cc;
       color: white;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
     }
     button:hover {
-      background: #0056b3;
+      background-color: #005fa3;
+    }
+    .result-section {
+      display: none;
+      margin-top: 40px;
+      animation: fadein 1s;
+    }
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     .chart-container {
-      max-width: 500px;
-      margin: 20px auto;
+      width: 100%;
+      max-width: 400px;
+      margin: 30px auto;
+    }
+    .advice-box {
+      background: #f0f4f8;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      line-height: 1.7;
+    }
+    .cta-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #ff6f00;
+      color: white;
+      padding: 12px 20px;
+      margin: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .cta-button:hover {
+      background-color: #e65c00;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 24px; }
+      input, button { font-size: 14px; }
     }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>Five Element Energy Insight</h1>
-  <p>Discover your elemental energy distribution based on your birth date and time.</p>
-  <input type="text" id="name" placeholder="Enter your name" />
-  <input type="date" id="birthdate" />
-  <input type="time" id="birthtime" />
-  <button onclick="generateReport()">Generate Report</button>
+  <p style="text-align: center;">Discover your elemental nature through ancient philosophy-inspired logic.</p>
 
-  <div id="result" style="display:none;">
-    <h2>Your Elemental Result</h2>
-    <p id="elementTag"></p>
-    <div class="chart-container"><canvas id="chart"></canvas></div>
+  <div class="form-section">
+    <div class="form-group"><label for="name">Name</label><input id="name" type="text" placeholder="Enter your name" required></div>
+    <div class="form-group"><label for="birthdate">Birthdate</label><input id="birthdate" type="date" required></div>
+    <div class="form-group"><label for="birthtime">Birth Time (24-hour format)</label><input id="birthtime" type="time" required></div>
+    <button id="generateBtn">Generate Report</button>
+  </div>
+
+  <div id="resultSection" class="result-section">
+    <h2>Your Elemental Profile</h2>
+    <p id="elementSummary"></p>
+    <div class="chart-container"><canvas id="elementChart"></canvas></div>
+    <div id="adviceBox" class="advice-box"></div>
+
+    <div class="cta-section">
+      <a id="productLink" class="cta-button" href="#">Explore Your Element Collection</a>
+      <a id="downloadBtn" class="cta-button" href="#">Download Report</a>
+      <a class="cta-button" href="https://fiveflowstudio.com/preview/products/essential-elemental-report">Get Your Full Elemental Report</a>
+    </div>
+
+    <div class="cta-section">
+      <button onclick="shareFacebook()">Share on Facebook</button>
+      <button onclick="shareTwitter()">Share on Twitter</button>
+      <button onclick="shareWhatsApp()">Share on WhatsApp</button>
+      <button onclick="copyURL()">Copy Link</button>
+    </div>
+
+    <div class="footer">
+      <p>This tool provides general personality-based lifestyle insights.<br>
+      For entertainment and personal insight only. Not intended to replace professional, medical or psychological guidance.</p>
+    </div>
   </div>
 </div>
 
 <script>
-function generateReport() {
-  const name = document.getElementById('name').value;
-  const birthdate = document.getElementById('birthdate').value;
-  const birthtime = document.getElementById('birthtime').value;
-  if (!name || !birthdate || !birthtime) {
-    alert("Please complete all fields.");
-    return;
-  }
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = ["Wood", "Fire", "Earth", "Metal", "Water"];
+  const adviceMap = {
+    Wood: "You are naturally creative and seek harmony. Explore opportunities to express yourself and nurture your ideas.",
+    Fire: "You radiate enthusiasm and passion. Pursue challenges with bold energy and share your light with others.",
+    Earth: "You provide stability and support. Focus on grounding practices and strengthen your sense of inner balance.",
+    Metal: "You value precision and clarity. Embrace structure and refine your environment to match your ideals.",
+    Water: "You are deeply intuitive and wise. Let your reflections guide you and embrace the beauty of fluidity."
+  };
+  let chartInstance = null;
+  let reportHTML = "";
 
-  const day = new Date(birthdate).getDate();
-  const hour = parseInt(birthtime.split(':')[0], 10);
-  const elements = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
-  const mainIndex = day % 5;
-  const subIndex = hour % 5;
-
-  const data = [0, 0, 0, 0, 0];
-  data[mainIndex] += 60;
-  data[subIndex] += 40;
-
-  document.getElementById('result').style.display = 'block';
-  document.getElementById('elementTag').innerText = `Main: ${elements[mainIndex]}, Secondary: ${elements[subIndex]}`;
-
-  const ctx = document.getElementById('chart').getContext('2d');
-  if (window.myChart) window.myChart.destroy();
-  window.myChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: elements,
-      datasets: [{
-        data: data,
-        backgroundColor: ['#4CAF50', '#F44336', '#FFEB3B', '#9E9E9E', '#2196F3']
-      }]
+  document.getElementById("generateBtn").addEventListener("click", function () {
+    const name = document.getElementById("name").value.trim();
+    const birthdate = document.getElementById("birthdate").value;
+    const birthtime = document.getElementById("birthtime").value;
+    if (!name || !birthdate || !birthtime) {
+      alert("Please fill in all fields.");
+      return;
     }
+
+    const day = parseInt(birthdate.split("-")[2], 10);
+    const hour = parseInt(birthtime.split(":")[0], 10);
+    const main = elements[day % 5];
+    const sub = elements[hour % 5];
+
+    const summary = `Your primary element is <strong>${main}</strong> and your secondary element is <strong>${sub}</strong>.`;
+    document.getElementById("elementSummary").innerHTML = summary;
+    document.getElementById("adviceBox").innerText = adviceMap[main];
+    document.getElementById("productLink").href = "/collections/" + main.toLowerCase() + "-collection";
+
+    const chartData = {
+      Wood: Math.floor(Math.random() * 30 + 10),
+      Fire: Math.floor(Math.random() * 30 + 10),
+      Earth: Math.floor(Math.random() * 30 + 10),
+      Metal: Math.floor(Math.random() * 30 + 10),
+      Water: Math.floor(Math.random() * 30 + 10)
+    };
+
+    const ctx = document.getElementById("elementChart").getContext("2d");
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: elements,
+        datasets: [{
+          data: Object.values(chartData),
+          backgroundColor: ['#66bb6a', '#ef5350', '#fdd835', '#b0bec5', '#42a5f5']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "bottom" }
+        }
+      }
+    });
+
+    document.getElementById("resultSection").style.display = "block";
+    reportHTML = `<h2>Five Element Report for ${name}</h2><p>${summary}</p><p><strong>Insight:</strong> ${adviceMap[main]}</p>`;
+  });
+
+  document.getElementById("downloadBtn").addEventListener("click", function () {
+    const name = document.getElementById("name").value.trim() || "Element_Report";
+    const blob = new Blob([reportHTML || "No report generated."], { type: "text/html" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Five_Element_Report_${name}.html`;
+    link.click();
+  });
+});
+
+function shareFacebook() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+}
+function shareTwitter() {
+  const url = encodeURIComponent(window.location.href);
+  const text = "Explore your elemental insights!";
+  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank");
+}
+function shareWhatsApp() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://api.whatsapp.com/send?text=${url}`, "_blank");
+}
+function copyURL() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    alert("Link copied to clipboard!");
   });
 }
 </script>
