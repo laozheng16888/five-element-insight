@@ -438,370 +438,395 @@
     </div>
 
     <script>
-        let elementalChartInstance = null; // To hold Chart.js instance
+        document.addEventListener('DOMContentLoaded', function() {
+            let elementalChartInstance = null; // To hold Chart.js instance
 
-        // Function to calculate elemental proportions based on birth data
-        function calculateElementalProportions(birthDate, birthTime) {
-            const monthVal = birthDate.getMonth(); // 0-11
-            const dayVal = birthDate.getDate();   // 1-31
-            const hourVal = birthTime.getHours(); // 0-23
-            const minuteVal = birthTime.getMinutes(); // 0-59
-            const year = birthDate.getFullYear();
+            // Function to calculate elemental proportions based on birth data
+            function calculateElementalProportions(birthDate, birthTime) {
+                const monthVal = birthDate.getMonth(); // 0-11
+                const dayVal = birthDate.getDate();   // 1-31
+                const hourVal = birthTime.getHours(); // 0-23
+                const minuteVal = birthTime.getMinutes(); // 0-59
+                const year = birthDate.getFullYear();
 
-            let elementScores = { "Wood": 0, "Fire": 0, "Earth": 0, "Metal": 0, "Water": 0 };
-            const elements = ["Wood", "Fire", "Earth", "Metal", "Water"]; // Mapped index 0-4
+                let elementScores = { "Wood": 0, "Fire": 0, "Earth": 0, "Metal": 0, "Water": 0 };
+                const elements = ["Wood", "Fire", "Earth", "Metal", "Water"]; // Mapped index 0-4
 
-            // Assign points to elements using modulo of various birth data components
-            // This provides a more distributed and varied percentage breakdown
-            elementScores[elements[monthVal % 5]] += 2; // Month has slightly higher weight
-            elementScores[elements[dayVal % 5]] += 1.5;
-            elementScores[elements[hourVal % 5]] += 1.2;
-            elementScores[elements[minuteVal % 5]] += 1;
+                // Assign points to elements using modulo of various birth data components
+                // This provides a more distributed and varied percentage breakdown
+                elementScores[elements[monthVal % 5]] += 2; // Month has slightly higher weight
+                elementScores[elements[dayVal % 5]] += 1.5;
+                elementScores[elements[hourVal % 5]] += 1.2;
+                elementScores[elements[minuteVal % 5]] += 1;
 
-            // Add a point from the sum of year digits for more variation
-            const yearSumDigits = String(year).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
-            elementScores[elements[yearSumDigits % 5]] += 1.3;
+                // Add a point from the sum of year digits for more variation
+                const yearSumDigits = String(year).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+                elementScores[elements[yearSumDigits % 5]] += 1.3;
 
-            // Add a point from the last digit of the year for another layer of variation
-            elementScores[elements[(year % 10) % 5]] += 0.8;
+                // Add a point from the last digit of the year for another layer of variation
+                elementScores[elements[(year % 10) % 5]] += 0.8;
 
-            // Calculate total score and percentages
-            let totalScore = Object.values(elementScores).reduce((sum, current) => sum + current, 0);
+                // Calculate total score and percentages
+                let totalScore = Object.values(elementScores).reduce((sum, current) => sum + current, 0);
 
-            let elementalPercentages = {};
-            if (totalScore > 0) {
-                let currentSum = 0;
-                for (const el of elements) { // Iterate in fixed order to ensure consistency
-                    const percentage = parseFloat((elementScores[el] / totalScore * 100).toFixed(1));
-                    elementalPercentages[el] = percentage;
-                    currentSum += percentage;
+                let elementalPercentages = {};
+                if (totalScore > 0) {
+                    let currentSum = 0;
+                    for (const el of elements) { // Iterate in fixed order to ensure consistency
+                        const percentage = parseFloat((elementScores[el] / totalScore * 100).toFixed(1));
+                        elementalPercentages[el] = percentage;
+                        currentSum += percentage;
+                    }
+                    // Adjust for potential rounding errors to ensure sum is 100%
+                    const diff = 100 - currentSum;
+                    if (Math.abs(diff) > 0.01) { // Only adjust if difference is significant
+                        const largestElem = Object.keys(elementalPercentages).reduce((a, b) => elementalPercentages[a] > elementalPercentages[b] ? a : b);
+                        elementalPercentages[largestElem] = parseFloat((elementalPercentages[largestElem] + diff).toFixed(1));
+                    }
+                } else {
+                    elements.forEach(el => elementalPercentages[el] = 20.0); // Default to equal if no scores
                 }
-                // Adjust for potential rounding errors to ensure sum is 100%
-                const diff = 100 - currentSum;
-                if (Math.abs(diff) > 0.01) { // Only adjust if difference is significant
-                    const largestElem = Object.keys(elementalPercentages).reduce((a, b) => elementalPercentages[a] > elementalPercentages[b] ? a : b);
-                    elementalPercentages[largestElem] = parseFloat((elementalPercentages[largestElem] + diff).toFixed(1));
-                }
-            } else {
-                elements.forEach(el => elementalPercentages[el] = 20.0); // Default to equal if no scores
+
+                return elementalPercentages;
             }
 
-            return elementalPercentages;
-        }
-
-        // --- Detailed Descriptions for Dynamic Report Generation ---
-        // These descriptions are designed to be positive and combine smoothly.
-        const descriptions = {
-            "Wood": {
-                core_personality: "You are known for your **growth-oriented**, **pioneering**, **compassionate**, and **decisive** nature.",
-                core_energy: "Your energy is **dynamic** and **expansive**, often driving you to initiate new ventures and overcome obstacles.",
-                core_vibe: "You exude a **fresh**, **vibrant**, and **innovative** aura.",
-                lifestyle: "You thrive on new beginnings and feel energized by nature, artistic expression, and collaborative environments. Pursue outdoor activities, creative projects, and community involvement to feel your best.",
-                balance: "To maintain harmony, embrace flexibility and patience. While ambitious, learn to flow with changes and avoid pushing too hard. Engage in calming activities like gardening, spending time in nature, or practicing mindful movement. Balance your drive with adequate rest and gentle self-care to prevent burnout.",
-                secondary_influence_personality: "This adds a layer of foundational resilience and a pioneering spirit to your core traits.",
-                secondary_influence_energy: "Your energy also carries a subtle current of constant renewal and a drive for progress.",
-                secondary_influence_vibe: "You radiate a resilient and fresh quality, always looking towards growth and new possibilities."
-            },
-            "Fire": {
-                core_personality: "You are known for being **passionate**, **enthusiastic**, **charismatic**, and **inspiring**.",
-                core_energy: "Your energy is **intense** and **transformative**, bringing warmth and excitement, and igniting action in others.",
-                core_vibe: "You project a **radiant**, **energetic**, and **captivating** aura.",
-                lifestyle: "You are drawn to vibrant social gatherings, performing arts, and adventurous travel. Express yourself through engaging hobbies and enjoy being at the center of stimulating experiences.",
-                balance: "To maintain harmony, cultivate inner calm and moderation. Your fiery nature can lead to overstimulation; practice mindfulness, meditation, or gentle exercise to cool down. Avoid excessive stimulants and ensure enough time for quiet reflection to prevent impulsiveness and maintain your inner spark.",
-                secondary_influence_personality: "This infuses your personality with an extra spark of enthusiasm and a compelling desire to inspire.",
-                secondary_influence_energy: "Your energy is further amplified by a warm, infectious enthusiasm that effortlessly ignites others.",
-                secondary_influence_vibe: "You also project an undeniable glow of warmth and inspiration, drawing people towards you."
-            },
-            "Earth": {
-                core_personality: "You are known for being **stable**, **grounded**, **nurturing**, and **practical**.",
-                core_energy: "Your energy is **steady** and **harmonizing**, promoting stability, security, and consistent support.",
-                core_vibe: "You exude a **comforting**, **reliable**, and **solid** aura.",
-                lifestyle: "You find joy in creating a nurturing home environment, engaging in practical skills, and community service. Comforting routines and wholesome meals bring you deep contentment and security.",
-                balance: "To maintain harmony, encourage adaptability and open-mindedness. While stability is your strength, be open to new experiences and stepping out of your comfort zone. Manage worry and overthinking by staying present, focusing on what you can control, and engaging in grounding activities like gardening or connecting with nature.",
-                secondary_influence_personality: "This provides a steady, nurturing foundation to your core traits, making you exceptionally dependable and supportive.",
-                secondary_influence_energy: "Your energy gains an extra layer of stability and a supportive, harmonizing presence that puts others at ease.",
-                secondary_influence_vibe: "You also radiate a deeply comforting and trustworthy aura, making others feel secure in your presence."
-            },
-            "Metal": {
-                core_personality: "You are known for being **organized**, **disciplined**, **precise**, and **discerning**.",
-                core_energy: "Your energy is **refined** and **structured**, emphasizing clarity and order, and leading to efficient results.",
-                core_vibe: "You project a **crisp**, **clear**, and **focused** aura.",
-                lifestyle: "You appreciate beauty in simplicity, logical thinking, and activities that require precision. Minimalist living, intellectual pursuits, and structured routines appeal greatly to you. You thrive in clean, orderly environments.",
-                balance: "To maintain harmony, foster emotional expression and spontaneity. While structure is important, allow room for intuition and feeling. Connect with others authentically and release rigidity. Embrace change as a natural part of growth and let go of the need for absolute control.",
-                secondary_influence_personality: "This lends a sharp clarity and a touch of refined elegance to your character, enhancing your meticulousness.",
-                secondary_influence_energy: "Your energy also carries a precise, results-driven focus and a desire for purity and excellence.",
-                secondary_influence_vibe: "You project a clear, discerning, and often sophisticated presence, with an air of dignified resolve."
-            },
-            "Water": {
-                core_personality: "You are known for being **intuitive**, **adaptable**, **reflective**, and **empathetic**.",
-                core_energy: "Your energy is **flowing** and **deep**, representing wisdom and introspection, allowing you to adapt with grace.",
-                core_vibe: "You exude a **calm**, **mysterious**, and **profound** aura.",
-                lifestyle: "You thrive in environments that allow for contemplation, emotional depth, and connection to your inner world. Solitary reflection, creative writing, spiritual practices, and fluid movements like yoga or swimming are highly beneficial.",
-                balance: "To maintain harmony, develop clear boundaries and self-assertion. While empathetic, ensure you don't absorb too much from others. Engage in activities that build confidence and help you express your needs. Avoid isolation and stagnation by connecting with supportive communities and channeling your wisdom outwards.",
-                secondary_influence_personality: "This adds a layer of deep intuition and profound empathy to your interactions, making you highly understanding.",
-                secondary_influence_energy: "Your energy possesses a subtle, adaptable flow and an insightful depth that allows you to see beyond the surface.",
-                secondary_influence_vibe: "You also radiate a serene, thoughtful, and deeply understanding aura, drawing people into meaningful connection."
-            }
-        };
-
-        // Function to draw the Chart.js pie chart
-        function drawChart(percentages) {
-            const ctx = document.getElementById('elementalChart').getContext('2d');
-            const labels = Object.keys(percentages);
-            const data = Object.values(percentages).map(Number); // Convert to numbers for Chart.js
-
-            const backgroundColors = labels.map(label => {
-                switch (label) {
-                    case 'Wood': return 'rgb(46, 139, 87)'; // Sea Green
-                    case 'Fire': return 'rgb(228, 77, 38)';  // Cinnabar
-                    case 'Earth': return 'rgb(160, 82, 45)'; // Sienna
-                    case 'Metal': return 'rgb(169, 169, 169)';// Dark Gray
-                    case 'Water': return 'rgb(43, 108, 176)'; // Strong Blue
-                    default: return '#cccccc';
-                }
-            });
-
-            if (elementalChartInstance) {
-                elementalChartInstance.destroy(); // Destroy existing chart if it exists
-            }
-
-            elementalChartInstance = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: backgroundColors,
-                        hoverOffset: 10,
-                        borderWidth: 1,
-                        borderColor: '#fff'
-                    }]
+            // --- Detailed Descriptions for Dynamic Report Generation ---
+            // These descriptions are designed to be positive and combine smoothly.
+            const descriptions = {
+                "Wood": {
+                    core_personality: "You are known for your **growth-oriented**, **pioneering**, **compassionate**, and **decisive** nature.",
+                    core_energy: "Your energy is **dynamic** and **expansive**, often driving you to initiate new ventures and overcome obstacles.",
+                    core_vibe: "You exude a **fresh**, **vibrant**, and **innovative** aura.",
+                    lifestyle: "You thrive on new beginnings and feel energized by nature, artistic expression, and collaborative environments. Pursue outdoor activities, creative projects, and community involvement to feel your best.",
+                    balance: "To maintain harmony, embrace flexibility and patience. While ambitious, learn to flow with changes and avoid pushing too hard. Engage in calming activities like gardening, spending time in nature, or practicing mindful movement. Balance your drive with adequate rest and gentle self-care to prevent burnout.",
+                    secondary_influence_personality: "This adds a layer of foundational resilience and a pioneering spirit to your core traits.",
+                    secondary_influence_energy: "Your energy also carries a subtle current of constant renewal and a drive for progress.",
+                    secondary_influence_vibe: "You radiate a resilient and fresh quality, always looking towards growth and new possibilities."
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                font: {
-                                    family: 'Open Sans',
-                                    size: 14
-                                },
-                                color: '#333'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
+                "Fire": {
+                    core_personality: "You are known for being **passionate**, **enthusiastic**, **charismatic**, and **inspiring**.",
+                    core_energy: "Your energy is **intense** and **transformative**, bringing warmth and excitement, and igniting action in others.",
+                    core_vibe: "You project a **radiant**, **energetic**, and **captivating** aura.",
+                    lifestyle: "You are drawn to vibrant social gatherings, performing arts, and adventurous travel. Express yourself through engaging hobbies and enjoy being at the center of stimulating experiences.",
+                    balance: "To maintain harmony, cultivate inner calm and moderation. Your fiery nature can lead to overstimulation; practice mindfulness, meditation, or gentle exercise to cool down. Avoid excessive stimulants and ensure enough time for quiet reflection to prevent impulsiveness and maintain your inner spark.",
+                    secondary_influence_personality: "This infuses your personality with an extra spark of enthusiasm and a compelling desire to inspire.",
+                    secondary_influence_energy: "Your energy is further amplified by a warm, infectious enthusiasm that effortlessly ignites others.",
+                    secondary_influence_vibe: "You also project an undeniable glow of warmth and inspiration, drawing people towards you."
+                },
+                "Earth": {
+                    core_personality: "You are known for being **stable**, **grounded**, **nurturing**, and **practical**.",
+                    core_energy: "Your energy is **steady** and **harmonizing**, promoting stability, security, and consistent support.",
+                    core_vibe: "You exude a **comforting**, **reliable**, and **solid** aura.",
+                    lifestyle: "You find joy in creating a nurturing home environment, engaging in practical skills, and community service. Comforting routines and wholesome meals bring you deep contentment and security.",
+                    balance: "To maintain harmony, encourage adaptability and open-mindedness. While stability is your strength, be open to new experiences and stepping out of your comfort zone. Manage worry and overthinking by staying present, focusing on what you can control, and engaging in grounding activities like gardening or connecting with nature.",
+                    secondary_influence_personality: "This provides a steady, nurturing foundation to your core traits, making you exceptionally dependable and supportive.",
+                    secondary_influence_energy: "Your energy gains an extra layer of stability and a supportive, harmonizing presence that puts others at ease.",
+                    secondary_influence_vibe: "You also radiate a deeply comforting and trustworthy aura, making others feel secure in your presence."
+                },
+                "Metal": {
+                    core_personality: "You are known for being **organized**, **disciplined**, **precise**, and **discerning**.",
+                    core_energy: "Your energy is **refined** and **structured**, emphasizing clarity and order, and leading to efficient results.",
+                    core_vibe: "You project a **crisp**, **clear**, and **focused** aura.",
+                    lifestyle: "You appreciate beauty in simplicity, logical thinking, and activities that require precision. Minimalist living, intellectual pursuits, and structured routines appeal greatly to you. You thrive in clean, orderly environments.",
+                    balance: "To maintain harmony, foster emotional expression and spontaneity. While structure is important, allow room for intuition and feeling. Connect with others authentically and release rigidity. Embrace change as a natural part of growth and let go of the need for absolute control.",
+                    secondary_influence_personality: "This lends a sharp clarity and a touch of refined elegance to your character, enhancing your meticulousness.",
+                    secondary_influence_energy: "Your energy also carries a precise, results-driven focus and a desire for purity and excellence.",
+                    secondary_influence_vibe: "You project a clear, discerning, and often sophisticated presence, with an air of dignified resolve."
+                },
+                "Water": {
+                    core_personality: "You are known for being **intuitive**, **adaptable**, **reflective**, and **empathetic**.",
+                    core_energy: "Your energy is **flowing** and **deep**, representing wisdom and introspection, allowing you to adapt with grace.",
+                    core_vibe: "You exude a **calm**, **mysterious**, and **profound** aura.",
+                    lifestyle: "You thrive in environments that allow for contemplation, emotional depth, and connection to your inner world. Solitary reflection, creative writing, spiritual practices, and fluid movements like yoga or swimming are highly beneficial.",
+                    balance: "To maintain harmony, develop clear boundaries and self-assertion. While empathetic, ensure you don't absorb too much from others. Engage in activities that build confidence and help you express your needs. Avoid isolation and stagnation by connecting with supportive communities and channeling your wisdom outwards.",
+                    secondary_influence_personality: "This adds a layer of deep intuition and profound empathy to your interactions, making you highly understanding.",
+                    secondary_influence_energy: "Your energy possesses a subtle, adaptable flow and an insightful depth that allows you to see beyond the surface.",
+                    secondary_influence_vibe: "You also radiate a serene, thoughtful, and deeply understanding aura, drawing people into meaningful connection."
+                }
+            };
+
+            // Function to draw the Chart.js pie chart
+            function drawChart(percentages) {
+                const ctx = document.getElementById('elementalChart').getContext('2d');
+                const labels = Object.keys(percentages);
+                const data = Object.values(percentages).map(Number); // Convert to numbers for Chart.js
+
+                const backgroundColors = labels.map(label => {
+                    switch (label) {
+                        case 'Wood': return 'rgb(46, 139, 87)'; // Sea Green
+                        case 'Fire': return 'rgb(228, 77, 38)';  // Cinnabar
+                        case 'Earth': return 'rgb(160, 82, 45)'; // Sienna
+                        case 'Metal': return 'rgb(169, 169, 169)';// Dark Gray
+                        case 'Water': return 'rgb(43, 108, 176)'; // Strong Blue
+                        default: return '#cccccc';
+                    }
+                });
+
+                if (elementalChartInstance) {
+                    elementalChartInstance.destroy(); // Destroy existing chart if it exists
+                }
+
+                elementalChartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            hoverOffset: 10,
+                            borderWidth: 1,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: {
+                                        family: 'Open Sans',
+                                        size: 14
+                                    },
+                                    color: '#333'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '%';
+                                        }
+                                        return label;
                                     }
-                                    if (context.parsed !== null) {
-                                        label += context.parsed + '%';
-                                    }
-                                    return label;
                                 }
                             }
                         }
                     }
-                }
-            });
-        }
-
-        document.getElementById('elementalForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            const userName = document.getElementById('userName').value;
-            const birthDateStr = document.getElementById('birthDate').value;
-            const birthTimeStr = document.getElementById('birthTime').value;
-
-            if (!userName || !birthDateStr || !birthTimeStr) {
-                alert('Please fill in all fields to generate your Elemental Energy Insight.');
-                return;
-            }
-
-            const birthDate = new Date(birthDateStr);
-            const birthTime = new Date(`2000-01-01T${birthTimeStr}`); // Dummy date for time extraction
-
-            if (isNaN(birthDate.getTime()) || isNaN(birthTime.getTime())) {
-                alert('Please enter a valid Date and Time of Birth.');
-                return;
-            }
-
-            // Show loading overlay
-            document.getElementById('loadingOverlay').style.display = 'flex';
-
-            // Simulate loading for better UX
-            setTimeout(() => {
-                const elementalPercentages = calculateElementalProportions(birthDate, birthTime);
-
-                // Determine the dominant and secondary elements by percentage
-                let sortedElements = Object.keys(elementalPercentages).sort((a, b) => parseFloat(elementalPercentages[b]) - parseFloat(elementalPercentages[a]));
-                const dominantElement = sortedElements[0];
-                let secondaryElement = sortedElements.length > 1 ? sortedElements[1] : dominantElement;
-                if (dominantElement === secondaryElement && sortedElements.length > 2) {
-                    secondaryElement = sortedElements[2]; // Get third if dominant and secondary are the same
-                } else if (dominantElement === secondaryElement && sortedElements.length === 1) {
-                    secondaryElement = dominantElement; // If only one element (unlikely but safe)
-                }
-
-                // Get descriptions for dominant and secondary elements
-                const dominantDesc = descriptions[dominantElement];
-                const secondaryDesc = descriptions[secondaryElement];
-
-                // --- Display Results ---
-                document.getElementById('displayedUserName').textContent = userName;
-                document.getElementById('dominantElementOutput').textContent = `${dominantElement} (${elementalPercentages[dominantElement]}%)`;
-
-                // Display all elemental percentages
-                const percentagesOutputDiv = document.getElementById('elementPercentagesOutput');
-                percentagesOutputDiv.innerHTML = ''; // Clear previous results
-                const orderedElements = ["Wood", "Fire", "Earth", "Metal", "Water"]; // Consistent display order
-                orderedElements.forEach(el => {
-                    const percent = elementalPercentages[el] || "0.0";
-                    const div = document.createElement('div');
-                    div.className = `element-percent-item ${el.toLowerCase()}`;
-                    div.innerHTML = `<strong>${el}:</strong> ${percent}%`;
-                    percentagesOutputDiv.appendChild(div);
                 });
+            }
 
-                // Draw the Chart.js pie chart
-                drawChart(elementalPercentages);
+            document.getElementById('elementalForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
 
+                const userNameInput = document.getElementById('userName');
+                const birthDateInput = document.getElementById('birthDate');
+                const birthTimeInput = document.getElementById('birthTime');
 
-                // Combine descriptions for Personality, Energy, Vibe
-                // Ensure secondary influence is only added if there's a distinct secondary element
-                document.getElementById('personalityType').textContent =
-                    `${dominantDesc.core_personality} ${secondaryElement !== dominantElement ? secondaryDesc.secondary_influence_personality : ''}`;
+                // Basic validation (should be caught by 'required' in HTML, but good to double check)
+                if (!userNameInput || !birthDateInput || !birthTimeInput) {
+                    alert('Error: Required form elements are missing. Please ensure your page loaded correctly.');
+                    return;
+                }
 
-                document.getElementById('energyStyle').textContent =
-                    `${dominantDesc.core_energy} ${secondaryElement !== dominantElement ? secondaryDesc.secondary_influence_energy : ''}`;
+                const userName = userNameInput.value;
+                const birthDateStr = birthDateInput.value;
+                const birthTimeStr = birthTimeInput.value;
 
-                document.getElementById('elementalVibe').textContent =
-                    `${dominantDesc.core_vibe} ${secondaryElement !== dominantElement ? secondaryDesc.secondary_influence_vibe : ''}`;
+                if (!userName || !birthDateStr || !birthTimeStr) {
+                    alert('Please fill in all fields to generate your Elemental Energy Insight.');
+                    return;
+                }
 
-                document.getElementById('lifestyleAffinity').textContent = dominantDesc.lifestyle;
-                document.getElementById('balanceSuggestions').textContent = dominantDesc.balance;
+                const birthDate = new Date(birthDateStr);
+                const birthTime = new Date(`2000-01-01T${birthTimeStr}`); // Dummy date for time extraction
 
-                // Update CTA links based on Dominant Element
-                const collectionMap = {
-                    "Wood": "/collections/wood-collection",
-                    "Fire": "/collections/fire-collection",
-                    "Earth": "/collections/earth-collection",
-                    "Metal": "/collections/metal-collection",
-                    "Water": "/collections/water-collection"
-                };
-                document.getElementById('exploreCollectionBtn').href = collectionMap[dominantElement] || '#';
+                if (isNaN(birthDate.getTime()) || isNaN(birthTime.getTime())) {
+                    alert('Please enter a valid Date and Time of Birth.');
+                    return;
+                }
 
-                // --- Social Sharing ---
-                const currentPageURL = encodeURIComponent(window.location.href);
-                document.querySelector('.share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${currentPageURL}`;
-                document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=Explore your elemental insights!`;
-                document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=${currentPageURL}`;
-                document.querySelector('.share-copy').onclick = () => {
-                    navigator.clipboard.writeText(window.location.href).then(() => {
-                        alert('Link copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy text: ', err);
+                // Show loading overlay
+                document.getElementById('loadingOverlay').style.display = 'flex';
+
+                // Simulate loading for better UX
+                setTimeout(() => {
+                    const elementalPercentages = calculateElementalProportions(birthDate, birthTime);
+
+                    // Determine the dominant and secondary elements by percentage
+                    let sortedElements = Object.keys(elementalPercentages).sort((a, b) => parseFloat(elementalPercentages[b]) - parseFloat(elementalPercentages[a]));
+                    const dominantElement = sortedElements[0];
+                    let secondaryElement = sortedElements.length > 1 ? sortedElements[1] : dominantElement;
+                    if (dominantElement === secondaryElement && sortedElements.length > 2) {
+                        secondaryElement = sortedElements[2]; // Get third if dominant and secondary are the same
+                    } else if (dominantElement === secondaryElement && sortedElements.length === 1) {
+                        secondaryElement = dominantElement; // If only one element (unlikely but safe)
+                    }
+
+                    // Get descriptions for dominant and secondary elements
+                    const dominantDesc = descriptions[dominantElement];
+                    const secondaryDesc = descriptions[secondaryElement];
+
+                    // --- Display Results ---
+                    document.getElementById('displayedUserName').textContent = userName;
+                    document.getElementById('dominantElementOutput').textContent = `${dominantElement} (${elementalPercentages[dominantElement]}%)`;
+
+                    // Display all elemental percentages
+                    const percentagesOutputDiv = document.getElementById('elementPercentagesOutput');
+                    percentagesOutputDiv.innerHTML = ''; // Clear previous results
+                    const orderedElements = ["Wood", "Fire", "Earth", "Metal", "Water"]; // Consistent display order
+                    orderedElements.forEach(el => {
+                        const percent = elementalPercentages[el] || "0.0";
+                        const div = document.createElement('div');
+                        div.className = `element-percent-item ${el.toLowerCase()}`;
+                        div.innerHTML = `<strong>${el}:</strong> ${percent}%`;
+                        percentagesOutputDiv.appendChild(div);
                     });
-                };
 
-                // --- Download Report Functionality ---
-                document.getElementById('downloadReportBtn').onclick = () => {
-                    const originalResultsHtml = document.getElementById('results').outerHTML;
-                    const originalBodyContent = document.body.outerHTML; // Get full body content
-                    const tempDoc = document.implementation.createHTMLDocument();
-                    tempDoc.documentElement.innerHTML = originalBodyContent;
-
-                    // Remove interactive elements, form, and script tags from the download version
-                    const formToRemove = tempDoc.getElementById('elementalForm');
-                    if (formToRemove) formToRemove.remove();
-                    const loadingOverlayToRemove = tempDoc.getElementById('loadingOverlay');
-                    if (loadingOverlayToRemove) loadingOverlayToRemove.remove();
-                    const scriptToRemove = tempDoc.querySelector('script'); // Removes the main script
-                    if (scriptToRemove) scriptToRemove.remove();
-                    const chartJsScriptToRemove = tempDoc.querySelector('script[src*="chart.js"]'); // Remove Chart.js script
-                    if (chartJsScriptToRemove) chartJsScriptToRemove.remove();
+                    // Draw the Chart.js pie chart
+                    drawChart(elementalPercentages);
 
 
-                    // Get the Chart.js image data URL
-                    const chartCanvas = document.getElementById('elementalChart');
-                    let chartImageUrl = '';
-                    if (chartCanvas) {
-                        chartImageUrl = chartCanvas.toDataURL('image/png');
-                        // Replace canvas with image in the temporary document
-                        const img = tempDoc.createElement('img');
-                        img.src = chartImageUrl;
-                        img.style.maxWidth = '100%';
-                        img.style.height = 'auto';
-                        img.style.display = 'block';
-                        img.style.margin = 'auto';
-                        const chartContainerInTemp = tempDoc.querySelector('.chart-container');
-                        if (chartContainerInTemp) {
-                            chartContainerInTemp.innerHTML = ''; // Clear canvas
-                            chartContainerInTemp.appendChild(img);
+                    // Combine descriptions for Personality, Energy, Vibe
+                    // Ensure secondary influence is only added if there's a distinct secondary element
+                    document.getElementById('personalityType').textContent =
+                        `${dominantDesc.core_personality} ${secondaryElement !== dominantElement ? secondaryDesc.secondary_influence_personality : ''}`;
+
+                    document.getElementById('energyStyle').textContent =
+                        `${dominantDesc.core_energy} ${secondaryElement !== dominantElement ? secondaryDesc.secondary_influence_energy : ''}`;
+
+                    document.getElementById('elementalVibe').textContent =
+                        `${dominantDesc.core_vibe} ${secondaryElement !== dominantElement ? secondaryDesc.secondary_influence_vibe : ''}`;
+
+                    document.getElementById('lifestyleAffinity').textContent = dominantDesc.lifestyle;
+                    document.getElementById('balanceSuggestions').textContent = dominantDesc.balance;
+
+                    // Update CTA links based on Dominant Element with ABSOLUTE URLs
+                    const collectionMap = {
+                        "Wood": "https://fiveflowstudio.com/collections/wood-collection",
+                        "Fire": "https://fiveflowstudio.com/collections/fire-collection",
+                        "Earth": "https://fiveflowstudio.com/collections/earth-collection",
+                        "Metal": "https://fiveflowstudio.com/collections/metal-collection",
+                        "Water": "https://fiveflowstudio.com/collections/water-collection"
+                    };
+                    document.getElementById('exploreCollectionBtn').href = collectionMap[dominantElement] || 'https://fiveflowstudio.com/collections/all'; // Fallback to 'all' if element not found
+
+                    // --- Social Sharing ---
+                    const currentPageURL = encodeURIComponent(window.location.href);
+                    document.querySelector('.share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${currentPageURL}`;
+                    document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=Explore your elemental insights!`;
+                    document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=${currentPageURL}`;
+                    document.querySelector('.share-copy').onclick = () => {
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            alert('Link copied to clipboard!');
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                        });
+                    };
+
+                    // --- Download Report Functionality ---
+                    document.getElementById('downloadReportBtn').onclick = () => {
+                        const originalBodyContent = document.body.outerHTML;
+                        const tempDoc = document.implementation.createHTMLDocument();
+                        tempDoc.documentElement.innerHTML = originalBodyContent;
+
+                        // Remove interactive elements, form, and script tags from the download version
+                        const formToRemove = tempDoc.getElementById('elementalForm');
+                        if (formToRemove) formToRemove.remove();
+                        const loadingOverlayToRemove = tempDoc.getElementById('loadingOverlay');
+                        if (loadingOverlayToRemove) loadingOverlayToRemove.remove();
+                        const scriptsToRemove = tempDoc.querySelectorAll('script');
+                        scriptsToRemove.forEach(script => script.remove()); // Remove all scripts for static HTML
+
+                        // Get the Chart.js image data URL and replace canvas with image
+                        const chartCanvas = document.getElementById('elementalChart');
+                        if (chartCanvas) {
+                            const chartImageUrl = chartCanvas.toDataURL('image/png');
+                            const img = tempDoc.createElement('img');
+                            img.src = chartImageUrl;
+                            img.alt = "Elemental Energy Chart";
+                            img.style.maxWidth = '100%';
+                            img.style.height = 'auto';
+                            img.style.display = 'block';
+                            img.style.margin = 'auto';
+                            const chartContainerInTemp = tempDoc.querySelector('.chart-container');
+                            if (chartContainerInTemp) {
+                                chartContainerInTemp.innerHTML = '';
+                                chartContainerInTemp.appendChild(img);
+                            }
                         }
-                    }
 
-                    // Remove CTA buttons specific to Shopline actions in the download version
-                    const shoplineButtons = tempDoc.querySelectorAll('#exploreCollectionBtn, #getFullReportBtn');
-                    shoplineButtons.forEach(btn => btn.remove());
-                    const ctaNoteToRemove = tempDoc.querySelector('.cta-note');
-                    if (ctaNoteToRemove) ctaNoteToRemove.remove();
+                        // Remove CTA buttons specific to Shopline actions and related notes
+                        const shoplineButtons = tempDoc.querySelectorAll('#exploreCollectionBtn, #getFullReportBtn');
+                        shoplineButtons.forEach(btn => btn.remove());
+                        const ctaNoteToRemove = tempDoc.querySelector('.cta-note');
+                        if (ctaNoteToRemove) ctaNoteToRemove.remove();
 
-                    // Adjust social share buttons for download (remove links, keep text)
-                    const socialButtonsInTemp = tempDoc.querySelectorAll('.social-share-buttons a, .social-share-buttons button');
-                    socialButtonsInTemp.forEach(btn => {
-                        btn.removeAttribute('href');
-                        btn.style.backgroundColor = '#ccc'; // Grey out
-                        btn.style.color = '#666';
-                        btn.style.pointerEvents = 'none'; // Make non-clickable
-                    });
-                    const socialShareSection = tempDoc.querySelector('.social-share-buttons');
-                    if (socialShareSection) {
-                        const disclaimer = tempDoc.createElement('p');
-                        disclaimer.style.textAlign = 'center';
-                        disclaimer.style.marginTop = '15px';
-                        disclaimer.style.fontSize = '0.9em';
-                        disclaimer.style.color = '#888';
-                        disclaimer.textContent = 'Share options are available on the live web page.';
-                        socialShareSection.parentNode.insertBefore(disclaimer, socialShareSection.nextSibling);
-                    }
-                    if (socialShareSection) socialShareSection.remove(); // Remove entire social share section
+                        // Adjust social share buttons for download (remove links, make static)
+                        const socialButtonsInTemp = tempDoc.querySelectorAll('.social-share-buttons a, .social-share-buttons button');
+                        socialButtonsInTemp.forEach(btn => {
+                            btn.removeAttribute('href');
+                            btn.style.backgroundColor = '#ccc';
+                            btn.style.color = '#666';
+                            btn.style.pointerEvents = 'none';
+                        });
+                        const socialShareSection = tempDoc.querySelector('.social-share-buttons');
+                        if (socialShareSection) {
+                            const disclaimer = tempDoc.createElement('p');
+                            disclaimer.style.textAlign = 'center';
+                            disclaimer.style.marginTop = '15px';
+                            disclaimer.style.fontSize = '0.9em';
+                            disclaimer.style.color = '#888';
+                            disclaimer.textContent = 'Share options are available on the live web page.';
+                            socialShareSection.parentNode.insertBefore(disclaimer, socialShareSection.nextSibling);
+                            socialShareSection.remove();
+                        }
 
-                    // Remove the download button itself from the downloadable HTML
-                    const downloadBtnInTemp = tempDoc.getElementById('downloadReportBtn');
-                    if (downloadBtnInTemp) downloadBtnInTemp.remove();
+                        // Remove the download button itself from the downloadable HTML
+                        const downloadBtnInTemp = tempDoc.getElementById('downloadReportBtn');
+                        if (downloadBtnInTemp) downloadBtnInTemp.remove();
 
-                    // Hide the initial container content, only show #results
-                    const formSectionInTemp = tempDoc.querySelector('h1, p'); // Select header elements
-                    if (formSectionInTemp) formSectionInTemp.remove(); // Remove initial intro text
-                    if (tempDoc.querySelector('form')) tempDoc.querySelector('form').remove(); // Remove form
+                        // Hide the initial container content, only show #results in the downloaded file
+                        const containerChildren = Array.from(tempDoc.querySelector('.container').children);
+                        for(const child of containerChildren) {
+                            if(child.id !== 'results' && child.className !== 'footer') {
+                                child.remove();
+                            }
+                        }
 
-                    // Get the outer HTML of the modified body
-                    let downloadHtmlContent = `<!DOCTYPE html>${tempDoc.documentElement.outerHTML}`;
+                        // Ensure results section and container are fully visible and static in downloaded file
+                        const resultsSectionInTemp = tempDoc.getElementById('results');
+                        if(resultsSectionInTemp) {
+                            resultsSectionInTemp.style.display = 'block';
+                            resultsSectionInTemp.style.opacity = '1';
+                            resultsSectionInTemp.style.transform = 'none';
+                            resultsSectionInTemp.style.animation = 'none';
+                            resultsSectionInTemp.classList.remove('result-section');
+                        }
+                        const containerInTemp = tempDoc.querySelector('.container');
+                        if (containerInTemp) {
+                            containerInTemp.style.opacity = '1';
+                            containerInTemp.style.transform = 'none';
+                            containerInTemp.style.animation = 'none';
+                        }
 
-                    const fileName = `Five_Element_Report_${userName.replace(/\s+/g, '_')}.html`;
-                    const blob = new Blob([downloadHtmlContent], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                };
+                        let downloadHtmlContent = `<!DOCTYPE html>${tempDoc.documentElement.outerHTML}`;
 
-                // Hide loading overlay and show results
-                document.getElementById('loadingOverlay').style.display = 'none';
-                document.getElementById('results').style.display = 'block';
+                        const fileName = `Five_Element_Report_${userName.replace(/\s+/g, '_')}.html`;
+                        const blob = new Blob([downloadHtmlContent], { type: 'text/html' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = fileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    };
 
-                // Scroll to results for better UX on mobile
-                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                    // Hide loading overlay and show results
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
 
-            }, 1000); // Simulate 1 second loading time
+                    // Scroll to results for better UX on mobile
+                    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+                }, 1000); // Simulate 1 second loading time
+            });
         });
     </script>
 </body>
