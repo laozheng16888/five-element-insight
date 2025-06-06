@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Five Element Insight</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f0f4f8);
+      color: #222;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .chart-container {
+      max-width: 500px;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Five Element Energy Insight</h1>
+  <p>Discover your elemental energy distribution based on your birth date and time.</p>
+  <input type="text" id="name" placeholder="Enter your name" />
+  <input type="date" id="birthdate" />
+  <input type="time" id="birthtime" />
+  <button onclick="generateReport()">Generate Report</button>
+
+  <div id="result" style="display:none;">
+    <h2>Your Elemental Result</h2>
+    <p id="elementTag"></p>
+    <div class="chart-container"><canvas id="chart"></canvas></div>
+  </div>
+</div>
+
+<script>
+function generateReport() {
+  const name = document.getElementById('name').value;
+  const birthdate = document.getElementById('birthdate').value;
+  const birthtime = document.getElementById('birthtime').value;
+  if (!name || !birthdate || !birthtime) {
+    alert("Please complete all fields.");
+    return;
+  }
+
+  const day = new Date(birthdate).getDate();
+  const hour = parseInt(birthtime.split(':')[0], 10);
+  const elements = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
+  const mainIndex = day % 5;
+  const subIndex = hour % 5;
+
+  const data = [0, 0, 0, 0, 0];
+  data[mainIndex] += 60;
+  data[subIndex] += 40;
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('elementTag').innerText = `Main: ${elements[mainIndex]}, Secondary: ${elements[subIndex]}`;
+
+  const ctx = document.getElementById('chart').getContext('2d');
+  if (window.myChart) window.myChart.destroy();
+  window.myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: elements,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#4CAF50', '#F44336', '#FFEB3B', '#9E9E9E', '#2196F3']
+      }]
+    }
+  });
+}
+</script>
+</body>
+</html>
