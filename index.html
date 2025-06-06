@@ -24,8 +24,9 @@
             --metal-color: #a9a9a9; /* Dark Gray */
             --water-color: #2b6cb0; /* Strong Blue */
 
-            --cta-dark-blue: #1A73E8; /* For "Get Your Full Report" */
+            --cta-dark-blue: #1A73E8; /* Original for "Get Your Full Report" */
             --cta-dark-orange: #E67817; /* For "Explore Your Element Collection" */
+            --cta-download-color: #007BFF; /* New: A strong blue for download button */
         }
 
         body {
@@ -239,6 +240,16 @@
             transform: translateY(-2px);
         }
 
+        /* Adjusted styles for the download button */
+        #downloadReportBtn {
+            background-color: var(--cta-download-color); /* A strong, accessible blue */
+            color: white; /* Ensure text is white for contrast */
+        }
+        #downloadReportBtn:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            transform: translateY(-2px);
+        }
+
         .cta-note {
             text-align: center;
             font-size: 0.85em;
@@ -256,7 +267,7 @@
             flex-wrap: wrap;
         }
 
-        .social-share-buttons a, .social-share-buttons button {
+        .social-share-buttons a { /* Removed button tag from selector as it's no longer there */
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -274,7 +285,7 @@
             cursor: pointer;
         }
 
-        .social-share-buttons a:hover, .social-share-buttons button:hover {
+        .social-share-buttons a:hover {
             opacity: 0.8;
             transform: translateY(-1px);
         }
@@ -282,7 +293,6 @@
         .share-facebook { background-color: #3b5998; }
         .share-twitter { background-color: #1da1f2; }
         .share-whatsapp { background-color: #25d366; }
-        /* Removed .share-copy styles */
 
         .footer {
             text-align: center;
@@ -354,8 +364,8 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            .social-share-buttons a, .social-share-buttons button {
-                width: 45%; /* Two buttons per row on small screens, adjusted for 3 buttons now */
+            .social-share-buttons a {
+                width: 45%; /* Two buttons per row on small screens */
                 margin-bottom: 10px;
             }
             .social-share-buttons {
@@ -426,7 +436,7 @@
                 <a href="#" class="share-facebook" target="_blank">Facebook</a>
                 <a href="#" class="share-twitter" target="_blank">Twitter</a>
                 <a href="#" class="share-whatsapp" target="_blank">WhatsApp</a>
-                </div>
+            </div>
 
             <a id="downloadReportBtn" class="cta-button" href="#">Download Your Report</a>
 
@@ -712,7 +722,7 @@
                     document.querySelector('.share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${currentPageURL}`;
                     document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=Explore your elemental insights!`;
                     document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=${currentPageURL}`;
-                    // Removed the .share-copy button logic
+                    // The "Copy Link" button is already removed in the HTML and JS logic.
 
                     // --- Download Report Functionality ---
                     document.getElementById('downloadReportBtn').onclick = () => {
@@ -753,7 +763,7 @@
                         if (ctaNoteToRemove) ctaNoteToRemove.remove();
 
                         // Adjust social share buttons for download (remove links, make static)
-                        const socialButtonsInTemp = tempDoc.querySelectorAll('.social-share-buttons a'); // Only 'a' tags now
+                        const socialButtonsInTemp = tempDoc.querySelectorAll('.social-share-buttons a');
                         socialButtonsInTemp.forEach(btn => {
                             btn.removeAttribute('href');
                             btn.style.backgroundColor = '#ccc';
