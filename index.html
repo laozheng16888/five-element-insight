@@ -24,9 +24,8 @@
             --metal-color: #a9a9a9; /* Dark Gray */
             --water-color: #2b6cb0; /* Strong Blue */
 
-            --cta-dark-blue: #1A73E8; /* Original for "Get Your Full Report" */
             --cta-dark-orange: #E67817; /* For "Explore Your Element Collection" */
-            --cta-download-color: #007BFF; /* New: A strong blue for download button */
+            --cta-download-color: #007BFF; /* A strong blue for download button */
         }
 
         body {
@@ -232,14 +231,6 @@
             transform: translateY(-2px);
         }
 
-        #getFullReportBtn {
-            background-color: var(--cta-dark-blue);
-        }
-        #getFullReportBtn:hover {
-            background-color: #155cb8;
-            transform: translateY(-2px);
-        }
-
         /* Adjusted styles for the download button */
         #downloadReportBtn {
             background-color: var(--cta-download-color); /* A strong, accessible blue */
@@ -267,7 +258,7 @@
             flex-wrap: wrap;
         }
 
-        .social-share-buttons a { /* Removed button tag from selector as it's no longer there */
+        .social-share-buttons a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -440,9 +431,7 @@
 
             <a id="downloadReportBtn" class="cta-button" href="#">Download Your Report</a>
 
-            <a id="getFullReportBtn" class="cta-button" href="https://fiveflowstudio.com/preview/products/essential-elemental-report" target="_blank">Get Your Full Elemental Report</a>
-            <p class="cta-note">For deeper insights and a full personalized journey.</p>
-        </div>
+            </div>
     </div>
 
     <div class="footer">
@@ -722,7 +711,6 @@
                     document.querySelector('.share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${currentPageURL}`;
                     document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=Explore your elemental insights!`;
                     document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=${currentPageURL}`;
-                    // The "Copy Link" button is already removed in the HTML and JS logic.
 
                     // --- Download Report Functionality ---
                     document.getElementById('downloadReportBtn').onclick = () => {
@@ -757,10 +745,11 @@
                         }
 
                         // Remove CTA buttons specific to Shopline actions and related notes
-                        const shoplineButtons = tempDoc.querySelectorAll('#exploreCollectionBtn, #getFullReportBtn');
+                        const shoplineButtons = tempDoc.querySelectorAll('#exploreCollectionBtn'); // Only 'explore' button left
                         shoplineButtons.forEach(btn => btn.remove());
-                        const ctaNoteToRemove = tempDoc.querySelector('.cta-note');
+                        const ctaNoteToRemove = tempDoc.querySelector('.cta-note'); // This note was tied to the "Full Report" button, so it's removed too.
                         if (ctaNoteToRemove) ctaNoteToRemove.remove();
+                        // Removed the #getFullReportBtn in this version
 
                         // Adjust social share buttons for download (remove links, make static)
                         const socialButtonsInTemp = tempDoc.querySelectorAll('.social-share-buttons a');
