@@ -25,7 +25,6 @@
             --water-color: #2b6cb0; /* Strong Blue */
 
             --cta-dark-orange: #E67817; /* For "Explore Your Element Collection" */
-            --cta-download-color: #007BFF; /* A strong blue for download button */
         }
 
         body {
@@ -231,23 +230,14 @@
             transform: translateY(-2px);
         }
 
-        /* Adjusted styles for the download button */
-        #downloadReportBtn {
-            background-color: var(--cta-download-color); /* A strong, accessible blue */
-            color: white; /* Ensure text is white for contrast */
-        }
-        #downloadReportBtn:hover {
-            background-color: #0056b3; /* Darker shade on hover */
-            transform: translateY(-2px);
-        }
-
-        .cta-note {
+        /* The .cta-note and .cta-download-color variables are no longer needed, but kept for clarity if future changes. */
+        /* .cta-note {
             text-align: center;
             font-size: 0.85em;
             color: #666;
             margin-top: -5px;
             margin-bottom: 20px;
-        }
+        } */
 
         .social-share-buttons {
             display: flex;
@@ -428,8 +418,6 @@
                 <a href="#" class="share-twitter" target="_blank">Twitter</a>
                 <a href="#" class="share-whatsapp" target="_blank">WhatsApp</a>
             </div>
-
-            <a id="downloadReportBtn" class="cta-button" href="#">Download Your Report</a>
 
             </div>
     </div>
@@ -712,106 +700,7 @@
                     document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=Explore your elemental insights!`;
                     document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=${currentPageURL}`;
 
-                    // --- Download Report Functionality ---
-                    document.getElementById('downloadReportBtn').onclick = () => {
-                        const originalBodyContent = document.body.outerHTML;
-                        const tempDoc = document.implementation.createHTMLDocument();
-                        tempDoc.documentElement.innerHTML = originalBodyContent;
-
-                        // Remove interactive elements, form, and script tags from the download version
-                        const formToRemove = tempDoc.getElementById('elementalForm');
-                        if (formToRemove) formToRemove.remove();
-                        const loadingOverlayToRemove = tempDoc.getElementById('loadingOverlay');
-                        if (loadingOverlayToRemove) loadingOverlayToRemove.remove();
-                        const scriptsToRemove = tempDoc.querySelectorAll('script');
-                        scriptsToRemove.forEach(script => script.remove()); // Remove all scripts for static HTML
-
-                        // Get the Chart.js image data URL and replace canvas with image
-                        const chartCanvas = document.getElementById('elementalChart');
-                        if (chartCanvas) {
-                            const chartImageUrl = chartCanvas.toDataURL('image/png');
-                            const img = tempDoc.createElement('img');
-                            img.src = chartImageUrl;
-                            img.alt = "Elemental Energy Chart";
-                            img.style.maxWidth = '100%';
-                            img.style.height = 'auto';
-                            img.style.display = 'block';
-                            img.style.margin = 'auto';
-                            const chartContainerInTemp = tempDoc.querySelector('.chart-container');
-                            if (chartContainerInTemp) {
-                                chartContainerInTemp.innerHTML = '';
-                                chartContainerInTemp.appendChild(img);
-                            }
-                        }
-
-                        // Remove CTA buttons specific to Shopline actions and related notes
-                        const shoplineButtons = tempDoc.querySelectorAll('#exploreCollectionBtn'); // Only 'explore' button left
-                        shoplineButtons.forEach(btn => btn.remove());
-                        const ctaNoteToRemove = tempDoc.querySelector('.cta-note'); // This note was tied to the "Full Report" button, so it's removed too.
-                        if (ctaNoteToRemove) ctaNoteToRemove.remove();
-                        // Removed the #getFullReportBtn in this version
-
-                        // Adjust social share buttons for download (remove links, make static)
-                        const socialButtonsInTemp = tempDoc.querySelectorAll('.social-share-buttons a');
-                        socialButtonsInTemp.forEach(btn => {
-                            btn.removeAttribute('href');
-                            btn.style.backgroundColor = '#ccc';
-                            btn.style.color = '#666';
-                            btn.style.pointerEvents = 'none';
-                        });
-                        const socialShareSection = tempDoc.querySelector('.social-share-buttons');
-                        if (socialShareSection) {
-                            const disclaimer = tempDoc.createElement('p');
-                            disclaimer.style.textAlign = 'center';
-                            disclaimer.style.marginTop = '15px';
-                            disclaimer.style.fontSize = '0.9em';
-                            disclaimer.style.color = '#888';
-                            disclaimer.textContent = 'Share options are available on the live web page.';
-                            socialShareSection.parentNode.insertBefore(disclaimer, socialShareSection.nextSibling);
-                            socialShareSection.remove();
-                        }
-
-                        // Remove the download button itself from the downloadable HTML
-                        const downloadBtnInTemp = tempDoc.getElementById('downloadReportBtn');
-                        if (downloadBtnInTemp) downloadBtnInTemp.remove();
-
-                        // Hide the initial container content, only show #results in the downloaded file
-                        const containerChildren = Array.from(tempDoc.querySelector('.container').children);
-                        for(const child of containerChildren) {
-                            if(child.id !== 'results' && child.className !== 'footer') {
-                                child.remove();
-                            }
-                        }
-
-                        // Ensure results section and container are fully visible and static in downloaded file
-                        const resultsSectionInTemp = tempDoc.getElementById('results');
-                        if(resultsSectionInTemp) {
-                            resultsSectionInTemp.style.display = 'block';
-                            resultsSectionInTemp.style.opacity = '1';
-                            resultsSectionInTemp.style.transform = 'none';
-                            resultsSectionInTemp.style.animation = 'none';
-                            resultsSectionInTemp.classList.remove('result-section');
-                        }
-                        const containerInTemp = tempDoc.querySelector('.container');
-                        if (containerInTemp) {
-                            containerInTemp.style.opacity = '1';
-                            containerInTemp.style.transform = 'none';
-                            containerInTemp.style.animation = 'none';
-                        }
-
-                        let downloadHtmlContent = `<!DOCTYPE html>${tempDoc.documentElement.outerHTML}`;
-
-                        const fileName = `Five_Element_Report_${userName.replace(/\s+/g, '_')}.html`;
-                        const blob = new Blob([downloadHtmlContent], { type: 'text/html' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = fileName;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    };
+                    // All download/full report buttons and their associated JS logic have been removed.
 
                     // Hide loading overlay and show results
                     document.getElementById('loadingOverlay').style.display = 'none';
