@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Five Element Energy Insight</title>
+    <title>五行能量洞察</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -28,7 +28,7 @@
         }
 
         body {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Open Sans', 'Microsoft YaHei', 'PingFang SC', sans-serif; /* Added Chinese fonts */
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom right, var(--background-start), var(--background-end));
@@ -67,7 +67,7 @@
         }
 
         h1, h2 {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', 'Microsoft YaHei', 'PingFang SC', sans-serif; /* Added Chinese fonts */
             color: var(--primary-color);
             text-align: center;
             margin-bottom: 25px;
@@ -158,7 +158,7 @@
             color: var(--secondary-color);
             margin-top: 0;
             margin-bottom: 15px;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', 'Microsoft YaHei', 'PingFang SC', sans-serif; /* Added Chinese fonts */
             text-align: center;
         }
 
@@ -230,15 +230,6 @@
             transform: translateY(-2px);
         }
 
-        /* The .cta-note and .cta-download-color variables are no longer needed, but kept for clarity if future changes. */
-        /* .cta-note {
-            text-align: center;
-            font-size: 0.85em;
-            color: #666;
-            margin-top: -5px;
-            margin-bottom: 20px;
-        } */
-
         .social-share-buttons {
             display: flex;
             justify-content: center;
@@ -299,7 +290,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', 'Microsoft YaHei', 'PingFang SC', sans-serif; /* Added Chinese fonts */
             color: var(--primary-color);
             font-size: 1.2em;
             font-weight: 600;
@@ -358,34 +349,34 @@
 <body>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        Generating your insights...
+        正在生成您的洞察报告...
     </div>
 
     <div class="container">
-        <h1>Discover Your Elemental Energy</h1>
-        <p style="text-align: center; margin-bottom: 30px;">Unlock personal insights inspired by ancient philosophy. Simply share your birth details to reveal your unique elemental composition.</p>
+        <h1>探索您的五行能量</h1>
+        <p style="text-align: center; margin-bottom: 30px;">揭示源自古老哲学的个人洞察。只需输入您的出生信息，即可了解您独特的五行构成。</p>
 
         <form id="elementalForm">
             <div class="form-group">
-                <label for="userName">Your Name:</label>
+                <label for="userName">您的姓名:</label>
                 <input type="text" id="userName" name="userName" required>
             </div>
             <div class="form-group">
-                <label for="birthDate">Date of Birth:</label>
+                <label for="birthDate">出生日期:</label>
                 <input type="date" id="birthDate" name="birthDate" required>
             </div>
             <div class="form-group">
-                <label for="birthTime">Time of Birth:</label>
+                <label for="birthTime">出生时间:</label>
                 <input type="time" id="birthTime" name="birthTime" required>
             </div>
-            <button type="submit">Generate Report</button>
+            <button type="submit">生成报告</button>
         </form>
 
         <div id="results">
-            <h2>Your Elemental Profile for <span id="displayedUserName"></span></h2>
+            <h2><span id="displayedUserName"></span>的五行能量报告</h2>
 
             <div class="result-section">
-                <h3>Your Elemental Composition:</h3>
+                <h3>您的五行构成:</h3>
                 <div class="element-percentages" id="elementPercentagesOutput">
                     </div>
                 <div class="chart-container">
@@ -394,36 +385,36 @@
             </div>
 
             <div class="result-section">
-                <h3>Your Core Energy & Influence:</h3>
-                <p><strong>Dominant Element:</strong> <span id="dominantElementOutput"></span></p>
-                <p><strong>Personality Insights:</strong> <span id="personalityType"></span></p>
-                <p><strong>Energy Style:</strong> <span id="energyStyle"></span></p>
-                <p><strong>Elemental Vibe:</strong> <span id="elementalVibe"></span></p>
+                <h3>您的核心能量与影响:</h3>
+                <p><strong>主导元素:</strong> <span id="dominantElementOutput"></span></p>
+                <p><strong>性格洞察:</strong> <span id="personalityType"></span></p>
+                <p><strong>能量风格:</strong> <span id="energyStyle"></span></p>
+                <p><strong>五行气场:</strong> <span id="elementalVibe"></span></p>
             </div>
 
             <div class="result-section">
-                <h3>Lifestyle Affinity:</h3>
+                <h3>生活习性偏好:</h3>
                 <p id="lifestyleAffinity"></p>
             </div>
 
             <div class="result-section">
-                <h3>Harmony & Balance Suggestions:</h3>
+                <h3>和谐与平衡建议:</h3>
                 <p id="balanceSuggestions"></p>
             </div>
 
-            <a id="exploreCollectionBtn" class="cta-button" href="#" target="_blank">Explore Your Element Collection</a>
+            <a id="exploreCollectionBtn" class="cta-button" href="#" target="_blank">探索您的专属五行系列</a>
 
             <div class="social-share-buttons">
-                <a href="#" class="share-facebook" target="_blank">Facebook</a>
-                <a href="#" class="share-twitter" target="_blank">Twitter</a>
-                <a href="#" class="share-whatsapp" target="_blank">WhatsApp</a>
+                <a href="#" class="share-facebook" target="_blank">分享到Facebook</a>
+                <a href="#" class="share-twitter" target="_blank">分享到Twitter</a>
+                <a href="#" class="share-whatsapp" target="_blank">分享到WhatsApp</a>
             </div>
 
             </div>
     </div>
 
     <div class="footer">
-        This service is for entertainment and personal insight only. Not intended to replace professional, medical, or psychological guidance.
+        本服务仅供娱乐和个人洞察之用，不作为专业医疗或心理指导的替代。
     </div>
 
     <script>
@@ -438,8 +429,8 @@
                 const minuteVal = birthTime.getMinutes(); // 0-59
                 const year = birthDate.getFullYear();
 
-                let elementScores = { "Wood": 0, "Fire": 0, "Earth": 0, "Metal": 0, "Water": 0 };
-                const elements = ["Wood", "Fire", "Earth", "Metal", "Water"]; // Mapped index 0-4
+                let elementScores = { "木": 0, "火": 0, "土": 0, "金": 0, "水": 0 }; // Translated elements
+                const elements = ["木", "火", "土", "金", "水"]; // Mapped index 0-4
 
                 // Assign points to elements using modulo of various birth data components
                 // This provides a more distributed and varied percentage breakdown
@@ -482,71 +473,72 @@
             // --- Detailed Descriptions for Dynamic Report Generation ---
             // These descriptions are designed to be positive and combine smoothly.
             const descriptions = {
-                "Wood": {
-                    core_personality: "You are known for your **growth-oriented**, **pioneering**, **compassionate**, and **decisive** nature.",
-                    core_energy: "Your energy is **dynamic** and **expansive**, often driving you to initiate new ventures and overcome obstacles.",
-                    core_vibe: "You exude a **fresh**, **vibrant**, and **innovative** aura.",
-                    lifestyle: "You thrive on new beginnings and feel energized by nature, artistic expression, and collaborative environments. Pursue outdoor activities, creative projects, and community involvement to feel your best.",
-                    balance: "To maintain harmony, embrace flexibility and patience. While ambitious, learn to flow with changes and avoid pushing too hard. Engage in calming activities like gardening, spending time in nature, or practicing mindful movement. Balance your drive with adequate rest and gentle self-care to prevent burnout.",
-                    secondary_influence_personality: "This adds a layer of foundational resilience and a pioneering spirit to your core traits.",
-                    secondary_influence_energy: "Your energy also carries a subtle current of constant renewal and a drive for progress.",
-                    secondary_influence_vibe: "You radiate a resilient and fresh quality, always looking towards growth and new possibilities."
+                "木": {
+                    core_personality: "您以其**成长导向**、**开拓精神**、**富有同情心**和**果断**的性格而闻名。",
+                    core_energy: "您的能量是**动态**且**开阔**的，常常驱使您开启新事业并克服障碍。",
+                    core_vibe: "您散发着**清新**、**活力**和**创新**的气场。",
+                    lifestyle: "您在新起点中茁壮成长，并从大自然、艺术表达和协作环境中获得能量。参与户外活动、创意项目和社区活动能让您感觉最佳。",
+                    balance: "为保持和谐，请拥抱灵活性和耐心。尽管您雄心勃勃，但要学会顺应变化，避免过度强求。参与园艺、亲近自然或练习正念运动等平静活动。平衡您的驱动力与充足的休息和温和的自我关怀，以防耗尽精力。",
+                    secondary_influence_personality: "这为您的核心特质增添了一层基础韧性和开拓精神。",
+                    secondary_influence_energy: "您的能量还带有一种持续更新和追求进步的微妙电流。",
+                    secondary_influence_vibe: "您散发着坚韧和清新的品质，总是展望成长和新的可能性。"
                 },
-                "Fire": {
-                    core_personality: "You are known for being **passionate**, **enthusiastic**, **charismatic**, and **inspiring**.",
-                    core_energy: "Your energy is **intense** and **transformative**, bringing warmth and excitement, and igniting action in others.",
-                    core_vibe: "You project a **radiant**, **energetic**, and **captivating** aura.",
-                    lifestyle: "You are drawn to vibrant social gatherings, performing arts, and adventurous travel. Express yourself through engaging hobbies and enjoy being at the center of stimulating experiences.",
-                    balance: "To maintain harmony, cultivate inner calm and moderation. Your fiery nature can lead to overstimulation; practice mindfulness, meditation, or gentle exercise to cool down. Avoid excessive stimulants and ensure enough time for quiet reflection to prevent impulsiveness and maintain your inner spark.",
-                    secondary_influence_personality: "This infuses your personality with an extra spark of enthusiasm and a compelling desire to inspire.",
-                    secondary_influence_energy: "Your energy is further amplified by a warm, infectious enthusiasm that effortlessly ignites others.",
-                    secondary_influence_vibe: "You also project an undeniable glow of warmth and inspiration, drawing people towards you."
+                "火": {
+                    core_personality: "您以其**热情**、**积极**、**魅力非凡**和**鼓舞人心**的性格而闻名。",
+                    core_energy: "您的能量是**强烈**且**变革性**的，带来温暖和兴奋，并激发他人的行动。",
+                    core_vibe: "您展现出**光芒四射**、**充满活力**和**迷人**的气场。",
+                    lifestyle: "您喜欢充满活力的社交聚会、表演艺术和冒险旅行。通过引人入胜的爱好表达自我，并享受成为刺激体验中心的乐趣。",
+                    balance: "为保持和谐，培养内心的平静和适度。您炽热的本性可能导致过度刺激；通过正念、冥想或温和的运动来降温。避免过度刺激物，确保有足够的时间进行安静的反思，以防止冲动并保持您的内在火花。",
+                    secondary_influence_personality: "这为您的性格注入了额外的热情火花和引人注目的鼓舞人心的渴望。",
+                    secondary_influence_energy: "您的能量被一种温暖、富有感染力的热情进一步放大，毫不费力地点燃他人。",
+                    secondary_influence_vibe: "您还散发着无可否认的温暖和灵感之光，吸引人们走向您。"
                 },
-                "Earth": {
-                    core_personality: "You are known for being **stable**, **grounded**, **nurturing**, and **practical**.",
-                    core_energy: "Your energy is **steady** and **harmonizing**, promoting stability, security, and consistent support.",
-                    core_vibe: "You exude a **comforting**, **reliable**, and **solid** aura.",
-                    lifestyle: "You find joy in creating a nurturing home environment, engaging in practical skills, and community service. Comforting routines and wholesome meals bring you deep contentment and security.",
-                    balance: "To maintain harmony, encourage adaptability and open-mindedness. While stability is your strength, be open to new experiences and stepping out of your comfort zone. Manage worry and overthinking by staying present, focusing on what you can control, and engaging in grounding activities like gardening or connecting with nature.",
-                    secondary_influence_personality: "This provides a steady, nurturing foundation to your core traits, making you exceptionally dependable and supportive.",
-                    secondary_influence_energy: "Your energy gains an extra layer of stability and a supportive, harmonizing presence that puts others at ease.",
-                    secondary_influence_vibe: "You also radiate a deeply comforting and trustworthy aura, making others feel secure in your presence."
+                "土": {
+                    core_personality: "您以其**稳定**、**务实**、**滋养**和**实用**的性格而闻名。",
+                    core_energy: "您的能量是**稳健**且**和谐**的，促进稳定、安全和持续的支持。",
+                    core_vibe: "您散发着**舒适**、**可靠**和**坚实**的气场。",
+                    lifestyle: "您从创造一个滋养的家庭环境、参与实用技能和社区服务中找到乐趣。舒适的日常习惯和健康的饮食给您带来深深的满足感和安全感。",
+                    balance: "为保持和谐，鼓励适应性和开放性。尽管稳定性是您的优势，但要对新体验和走出舒适区保持开放态度。通过活在当下、专注于您可以控制的事物，并参与园艺或亲近自然等接地气的活动来管理忧虑和过度思考。",
+                    secondary_influence_personality: "这为您的核心特质提供了稳定、滋养的基础，使您格外可靠和支持。",
+                    secondary_influence_energy: "您的能量增加了额外的稳定层，以及一种支持性、和谐的存在，让其他人感到安心。",
+                    secondary_influence_vibe: "您还散发着一种深具安慰和值得信赖的气场，让其他人感到在您身边很安全。"
                 },
-                "Metal": {
-                    core_personality: "You are known for being **organized**, **disciplined**, **precise**, and **discerning**.",
-                    core_energy: "Your energy is **refined** and **structured**, emphasizing clarity and order, and leading to efficient results.",
-                    core_vibe: "You project a **crisp**, **clear**, and **focused** aura.",
-                    lifestyle: "You appreciate beauty in simplicity, logical thinking, and activities that require precision. Minimalist living, intellectual pursuits, and structured routines appeal greatly to you. You thrive in clean, orderly environments.",
-                    balance: "To maintain harmony, foster emotional expression and spontaneity. While structure is important, allow room for intuition and feeling. Connect with others authentically and release rigidity. Embrace change as a natural part of growth and let go of the need for absolute control.",
-                    secondary_influence_personality: "This lends a sharp clarity and a touch of refined elegance to your character, enhancing your meticulousness.",
-                    secondary_influence_energy: "Your energy also carries a precise, results-driven focus and a desire for purity and excellence.",
-                    secondary_influence_vibe: "You project a clear, discerning, and often sophisticated presence, with an air of dignified resolve."
+                "金": {
+                    core_personality: "您以其**有条理**、**纪律严明**、**精确**和**洞察力强**的性格而闻名。",
+                    core_energy: "您的能量是**精炼**且**结构化**的，强调清晰和秩序，并带来高效的结果。",
+                    core_vibe: "您展现出**清晰**、**明了**和**专注**的气场。",
+                    lifestyle: "您欣赏极简之美、逻辑思维以及需要精确的活动。极简主义生活、智力追求和有条理的日常对您非常有吸引力。您在干净、有序的环境中茁壮成长。",
+                    balance: "为保持和谐，培养情感表达和自发性。尽管结构很重要，但要为直觉和感受留出空间。真诚地与他人联系并释放僵化。将改变视为成长中自然的一部分，放下对绝对控制的需要。",
+                    secondary_influence_personality: "这为您的性格赋予了清晰的洞察力和一丝精致的优雅，增强了您的严谨性。",
+                    secondary_influence_energy: "您的能量还带有精确、以结果为导向的焦点以及对纯粹和卓越的渴望。",
+                    secondary_influence_vibe: "您展现出清晰、敏锐且通常是精致的存在，带着一种高贵的决心感。"
                 },
-                "Water": {
-                    core_personality: "You are known for being **intuitive**, **adaptable**, **reflective**, and **empathetic**.",
-                    core_energy: "Your energy is **flowing** and **deep**, representing wisdom and introspection, allowing you to adapt with grace.",
-                    core_vibe: "You exude a **calm**, **mysterious**, and **profound** aura.",
-                    lifestyle: "You thrive in environments that allow for contemplation, emotional depth, and connection to your inner world. Solitary reflection, creative writing, spiritual practices, and fluid movements like yoga or swimming are highly beneficial.",
-                    balance: "To maintain harmony, develop clear boundaries and self-assertion. While empathetic, ensure you don't absorb too much from others. Engage in activities that build confidence and help you express your needs. Avoid isolation and stagnation by connecting with supportive communities and channeling your wisdom outwards.",
-                    secondary_influence_personality: "This adds a layer of deep intuition and profound empathy to your interactions, making you highly understanding.",
-                    secondary_influence_energy: "Your energy possesses a subtle, adaptable flow and an insightful depth that allows you to see beyond the surface.",
-                    secondary_influence_vibe: "You also radiate a serene, thoughtful, and deeply understanding aura, drawing people into meaningful connection."
+                "水": {
+                    core_personality: "您以其**直觉敏锐**、**适应性强**、**善于反思**和**富有同理心**的性格而闻名。",
+                    core_energy: "您的能量是**流动**且**深邃**的，代表智慧和内省，让您优雅地适应。",
+                    core_vibe: "您散发着**平静**、**神秘**和**深刻**的气场。",
+                    lifestyle: "您在允许沉思、情感深度以及与内心世界连接的环境中茁壮成长。独自反思、创意写作、精神实践以及瑜伽或游泳等流畅的运动对您非常有益。",
+                    balance: "为保持和谐，建立清晰的界限和自我主张。尽管富有同情心，但要确保您不会过多地吸收他人的情绪。参与能建立自信和帮助您表达需求的活动。避免孤立和停滞，通过与支持性社区联系并将您的智慧向外传递。",
+                    secondary_influence_personality: "这为您的互动增添了一层深刻的直觉和深厚的同理心，使您非常善解人意。",
+                    secondary_influence_energy: "您的能量拥有微妙、适应性强的流动和深刻的洞察力，让您能够洞悉表面之下。",
+                    secondary_influence_vibe: "您还散发着一种宁静、深思熟虑和深刻理解的气场，吸引人们建立有意义的连接。"
                 }
             };
 
             // Function to draw the Chart.js pie chart
             function drawChart(percentages) {
                 const ctx = document.getElementById('elementalChart').getContext('2d');
-                const labels = Object.keys(percentages);
+                // Use Chinese labels for the chart
+                const labels = Object.keys(percentages); // e.g., ["木", "火", "土", "金", "水"]
                 const data = Object.values(percentages).map(Number); // Convert to numbers for Chart.js
 
                 const backgroundColors = labels.map(label => {
                     switch (label) {
-                        case 'Wood': return 'rgb(46, 139, 87)'; // Sea Green
-                        case 'Fire': return 'rgb(228, 77, 38)';  // Cinnabar
-                        case 'Earth': return 'rgb(160, 82, 45)'; // Sienna
-                        case 'Metal': return 'rgb(169, 169, 169)';// Dark Gray
-                        case 'Water': return 'rgb(43, 108, 176)'; // Strong Blue
+                        case '木': return 'rgb(46, 139, 87)'; // Sea Green
+                        case '火': return 'rgb(228, 77, 38)';  // Cinnabar
+                        case '土': return 'rgb(160, 82, 45)'; // Sienna
+                        case '金': return 'rgb(169, 169, 169)';// Dark Gray
+                        case '水': return 'rgb(43, 108, 176)'; // Strong Blue
                         default: return '#cccccc';
                     }
                 });
@@ -574,7 +566,7 @@
                                 position: 'right',
                                 labels: {
                                     font: {
-                                        family: 'Open Sans',
+                                        family: 'Open Sans, Microsoft YaHei, PingFang SC', // Ensure Chinese font for legend
                                         size: 14
                                     },
                                     color: '#333'
@@ -592,6 +584,12 @@
                                         }
                                         return label;
                                     }
+                                },
+                                titleFont: {
+                                    family: 'Open Sans, Microsoft YaHei, PingFang SC' // Ensure Chinese font for tooltip title
+                                },
+                                bodyFont: {
+                                    family: 'Open Sans, Microsoft YaHei, PingFang SC' // Ensure Chinese font for tooltip body
                                 }
                             }
                         }
@@ -608,7 +606,7 @@
 
                 // Basic validation (should be caught by 'required' in HTML, but good to double check)
                 if (!userNameInput || !birthDateInput || !birthTimeInput) {
-                    alert('Error: Required form elements are missing. Please ensure your page loaded correctly.');
+                    alert('错误：缺少必需的表单元素。请确保您的页面已正确加载。');
                     return;
                 }
 
@@ -617,7 +615,7 @@
                 const birthTimeStr = birthTimeInput.value;
 
                 if (!userName || !birthDateStr || !birthTimeStr) {
-                    alert('Please fill in all fields to generate your Elemental Energy Insight.');
+                    alert('请填写所有字段以生成您的五行能量洞察报告。');
                     return;
                 }
 
@@ -625,7 +623,7 @@
                 const birthTime = new Date(`2000-01-01T${birthTimeStr}`); // Dummy date for time extraction
 
                 if (isNaN(birthDate.getTime()) || isNaN(birthTime.getTime())) {
-                    alert('Please enter a valid Date and Time of Birth.');
+                    alert('请输入有效的出生日期和时间。');
                     return;
                 }
 
@@ -657,11 +655,13 @@
                     // Display all elemental percentages
                     const percentagesOutputDiv = document.getElementById('elementPercentagesOutput');
                     percentagesOutputDiv.innerHTML = ''; // Clear previous results
-                    const orderedElements = ["Wood", "Fire", "Earth", "Metal", "Water"]; // Consistent display order
+                    const orderedElements = ["木", "火", "土", "金", "水"]; // Consistent display order
                     orderedElements.forEach(el => {
                         const percent = elementalPercentages[el] || "0.0";
                         const div = document.createElement('div');
-                        div.className = `element-percent-item ${el.toLowerCase()}`;
+                        // Ensure CSS class uses lowercase English for styling
+                        const classForCss = { "木": "wood", "火": "fire", "土": "earth", "金": "metal", "水": "water" };
+                        div.className = `element-percent-item ${classForCss[el]}`;
                         div.innerHTML = `<strong>${el}:</strong> ${percent}%`;
                         percentagesOutputDiv.appendChild(div);
                     });
@@ -686,21 +686,23 @@
 
                     // Update CTA links based on Dominant Element with ABSOLUTE URLs
                     const collectionMap = {
-                        "Wood": "https://fiveflowstudio.com/collections/wood-collection",
-                        "Fire": "https://fiveflowstudio.com/collections/fire-collection",
-                        "Earth": "https://fiveflowstudio.com/collections/earth-collection",
-                        "Metal": "https://fiveflowstudio.com/collections/metal-collection",
-                        "Water": "https://fiveflowstudio.com/collections/water-collection"
+                        "木": "https://fiveflowstudio.com/collections/wood-collection",
+                        "火": "https://fiveflowstudio.com/collections/fire-collection",
+                        "土": "https://fiveflowstudio.com/collections/earth-collection",
+                        "金": "https://fiveflowstudio.com/collections/metal-collection",
+                        "水": "https://fiveflowstudio.com/collections/water-collection"
                     };
+                    // Use English element names for the URL mapping if that's what the Shopline collection URLs use
+                    const dominantElementEnglish = { "木": "wood", "火": "fire", "土": "earth", "金": "metal", "水": "water" }[dominantElement];
                     document.getElementById('exploreCollectionBtn').href = collectionMap[dominantElement] || 'https://fiveflowstudio.com/collections/all'; // Fallback to 'all' if element not found
 
                     // --- Social Sharing ---
                     const currentPageURL = encodeURIComponent(window.location.href);
+                    // Social sharing texts remain in English or are generic, as platforms handle translation
                     document.querySelector('.share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${currentPageURL}`;
-                    document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=Explore your elemental insights!`;
-                    document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=${currentPageURL}`;
+                    document.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?url=${currentPageURL}&text=探索您的五行能量洞察！`; // Added Chinese text
+                    document.querySelector('.share-whatsapp').href = `https://api.whatsapp.com/send?text=探索您的五行能量洞察！ ${currentPageURL}`; // Added Chinese text
 
-                    // All download/full report buttons and their associated JS logic have been removed.
 
                     // Hide loading overlay and show results
                     document.getElementById('loadingOverlay').style.display = 'none';
